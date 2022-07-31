@@ -40,8 +40,8 @@ void show_display(unsigned char number)
         break;
 
         case 2:
-        set_bit(PORTC, PC1);
         clear_bit(PORTC, PC0);
+        set_bit(PORTC, PC1);
         clear_bit(PORTC, PC2);
         clear_bit(PORTC, PC3);
         break;
@@ -54,16 +54,16 @@ void show_display(unsigned char number)
         break;
 
         case 4:
-        set_bit(PORTC, PC2);
         clear_bit(PORTC, PC0);
         clear_bit(PORTC, PC1);
+        set_bit(PORTC, PC2);
         clear_bit(PORTC, PC3);
         break;
 
         case 5:
         set_bit(PORTC, PC0);
-        set_bit(PORTC, PC2);
         clear_bit(PORTC, PC1);
+        set_bit(PORTC, PC2);
         clear_bit(PORTC, PC3);
         break;
 
@@ -90,31 +90,31 @@ void show_display(unsigned char number)
 
         case 9:
         set_bit(PORTC, PC0);
-        set_bit(PORTC, PC3);
         clear_bit(PORTC, PC1);
         clear_bit(PORTC, PC2);
+        set_bit(PORTC, PC3);
         break;
     }
 }
 
-void display_7seg(unsigned char unidade, unsigned char dezena)
+void display_7seg(unsigned char dezena, unsigned char unidade)
 {
     static bool estado = 0;
 
     switch (estado)
     {
         case 0:
-        clear_bit(PORTB, PB7);
-        set_bit(PORTB, PB6);
-        show_display(unidade);
-        estado = 1;
-        break;
+            set_bit(PORTB, PB6);
+            clear_bit(PORTB, PB7);
+            show_display(unidade);
+            //estado = 1;
+            break;
 
         case 1:
-        clear_bit(PORTB, PB6);
-        set_bit(PORTB, PB7);
-        show_display(dezena);
-        estado = 0;
-        break;
+            clear_bit(PORTB, PB6);
+            set_bit(PORTB, PB7);
+            show_display(dezena);
+            estado = 0;
+            break;
     }
 }

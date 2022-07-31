@@ -32,7 +32,7 @@ void setup_hardware(void)
 
 void setup_software(void)
 {
-    max_timer0 =   10;  // tempo:  10ms
+    max_timer0 =    1;  // tempo:   1ms
     max_timer1 =  200;  // tempo: 200ms 
     max_timer2 =  400;  // tempo: 400ms
     max_timer3 =  600;  // tempo: 600ms
@@ -98,13 +98,12 @@ void f_timers() // chamada a cada 1ms
 
 }
 
-void f_timer0(void) //  10ms
+void f_timer0(void) //   1ms
 {   
-
 }
 
 void f_timer1(void) // 200ms
-{   
+{
 
 }
 
@@ -120,6 +119,12 @@ void f_timer3(void) // 600ms
 
 void f_timer4(void) // 800ms
 {
+    display_7seg(dezena, unidade);
+    cpl_bit(PORTD, PD7);
+}
+
+void f_timer5(void) // 1segundo
+{   
     unidade++;   
     if(unidade > 9)
     {
@@ -127,11 +132,5 @@ void f_timer4(void) // 800ms
         dezena++;
     }
     if(dezena > 9) dezena = 0;
-    cpl_bit(PORTD, PD7);
-}
-
-void f_timer5(void) // 1segundo
-{   
-    display_7seg(unidade, dezena);
     cpl_bit(PORTB, PB0);
 }
