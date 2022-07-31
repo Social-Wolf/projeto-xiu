@@ -14,6 +14,7 @@
 #define cpl_bit(y,bit)      (y^=(1<<bit)) //troca o estado lógico do bit x da variável Y 
 #define tst_bit(y,bit)      (y&(1<<bit)) //retorna 0 ou 1 conforme leitura do bit
 
+void setup();
 void setup_software();
 void setup_hardware();
 void f_timers();

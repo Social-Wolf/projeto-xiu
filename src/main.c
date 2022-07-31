@@ -1,7 +1,7 @@
 #include "main.h"
 
 unsigned int  max_timer0, max_timer1, max_timer2, max_timer3, max_timer4, max_timer5;
-unsigned int unidade = 0, dezena = 0;
+unsigned int  unidade = 0, dezena = 0;
 unsigned int  millis; 
 
 ISR(TIMER0_OVF_vect) 
@@ -13,11 +13,17 @@ ISR(TIMER0_OVF_vect)
 
 int main()
 {
-    setup_hardware();
-    setup_software();  
+    setup();
     while(1)  loop();
 
     return 0;
+}
+
+void setup(void)
+{
+    setup_hardware();
+    setup_software();
+    tratar_leitura_do_ADC();
 }
 
 void setup_hardware(void)
@@ -25,6 +31,7 @@ void setup_hardware(void)
     cli();  //desalibita todas as  interrupcoes
   
     io_config();
+    adc_config();
     timer_config();
 
     sei();  //habilita todas as interrupcoes
