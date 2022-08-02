@@ -7,6 +7,7 @@
 
 void io_config();
 void timer_config();
+void uart_config(uint16_t size);
 void interrupt_config();
 void adc_config();
 
