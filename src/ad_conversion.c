@@ -1,6 +1,6 @@
-#include "adc_conversion.h"
+#include "ad_conversion.h"
 
-void adc_conversion_ch_service(unsigned char channel)
+void set_ad_chanel_service(unsigned char channel)
 {
   ADMUX &= 0xf0;
   ADMUX |= (channel & 0x0f);
@@ -8,15 +8,14 @@ void adc_conversion_ch_service(unsigned char channel)
   ADCSRA |= 0x40;
 }
 
-uint8_t adc_read_service(void)
+uint8_t ad_read_service(void)
 {
   unsigned char dado = ADCH;
   return dado;
 }
 
-void tratar_leitura_do_ADC(void)
-{
-    /* inicializo no setup na funcao calibration e em seguida toda
+void read_ad_chanel(void)
+{/* inicializo no setup na funcaoo calibration e em seguida toda
      * vez que ocorre uma conversao a interrupcao do AD ocorre
      * e entao esta funcao e chamada pelo vetor de interrupcao
      * do AD, obtendo os dados da conversao em "paralelo" a rotina */
@@ -30,38 +29,44 @@ void tratar_leitura_do_ADC(void)
       
     case 0:
       estado = 1;
-      leitura_adc[0] = adc_read_service();
-      adc_conversion_ch_service(1);
+      ad_read[0] = ad_read_service();
+      set_ad_chanel_service(1);
       break;
         
     case 1:
       estado = 2;
-      leitura_adc[1] = adc_read_service();
-      adc_conversion_ch_service(2);
+      ad_read[1] = ad_read_service();
+      set_ad_chanel_service(2);
       break;
 
     case 2:
       estado = 3;
-      leitura_adc[2] = adc_read_service();
-      adc_conversion_ch_service(3);
+      ad_read[2] = ad_read_service();
+      set_ad_chanel_service(3);
       break;
 
     case 3:
       estado = 4;
-      leitura_adc[3] = adc_read_service();
-      adc_conversion_ch_service(5);
+      ad_read[3] = ad_read_service();
+      set_ad_chanel_service(4);
       break;
 
     case 4:
+      estado = 5;
+      ad_read[4] = ad_read_service();
+      set_ad_chanel_service(5);
+      break;
+
+    case 5:
       estado = 0;
-      leitura_adc[4] = adc_read_service();
-      adc_conversion_ch_service(0);
+      ad_read[5] = ad_read_service();
+      set_ad_chanel_service(0);
       break;
 
     default:
       estado = 0;
-      adc_conversion_ch_service(0);
-      leitura_adc[0] = adc_read_service();
+      set_ad_chanel_service(0);
+      ad_read[0] = ad_read_service();
       break; 
   }    
 }
