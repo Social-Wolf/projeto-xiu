@@ -1,17 +1,30 @@
 #include "main.h"
 
-unsigned int  max_timer0, max_timer1, max_timer2, max_timer3, max_timer4, max_timer5;
-unsigned int  unidade = 0, dezena = 0;
-unsigned int  millis; 
+uint16_t  max_timer0, max_timer1, max_timer2, max_timer3, max_timer4, max_timer5;
+uint16_t  unidade = 0, dezena = 0;
+
+char ch;
+int8_t buffer[];
+int8_t memoria;
 
 ISR(TIMER0_OVF_vect) 
 {
   TCNT0 = 240; // recarrega o Timer 0 para contagem de 1ms
-  millis++;
   f_timers();
 }
 
-int main()
+ISR(USART_RX_vect) 
+{
+  ch = UDR0;    // Faz a leitura do buffer da serial 
+  UDR0 = ch;    // envia pela serial o valor lido  
+}
+
+ISR(ADC_vect)
+{
+  read_ad_chanel();
+}
+
+int16_t main()
 {
     setup();
     while(1)  loop();
@@ -23,7 +36,7 @@ void setup(void)
 {
     setup_hardware();
     setup_software();
-    tratar_leitura_do_ADC();
+    //tratar_leitura_do_ADC();
 }
 
 void setup_hardware(void)
@@ -31,8 +44,10 @@ void setup_hardware(void)
     cli();  //desalibita todas as  interrupcoes
   
     io_config();
-    adc_config();
     timer_config();
+    uart_config(16);
+    adc_config();
+    read_ad_chanel();
 
     sei();  //habilita todas as interrupcoes
 }
@@ -49,11 +64,12 @@ void setup_software(void)
 
 void loop(void)
 {
+
 }
 
 void f_timers() // chamada a cada 1ms
 {
-    static unsigned int cont0 = 0, cont1 = 0, cont2 = 0, cont3 = 0, cont4 = 0, cont5 = 0;
+    static uint16_t cont0 = 0, cont1 = 0, cont2 = 0, cont3 = 0, cont4 = 0, cont5 = 0;
 
     if(cont0 < max_timer0) cont0++; 
     
@@ -116,7 +132,7 @@ void f_timer1(void) // 200ms
 
 void f_timer2(void) // 400ms
 {
-  
+    
 }
 
 void f_timer3(void) // 600ms
@@ -128,6 +144,13 @@ void f_timer4(void) // 800ms
 {
     display_7seg(dezena, unidade);
     cpl_bit(PORTD, PD7);
+
+    //uart_string_sending_service("ola");
+    //uart_string_sending_service("\n");
+
+    memoria = ad_read[4];
+    sprintf(buffer, "%d\n", memoria);
+    uart_string_sending_service(buffer);
 }
 
 void f_timer5(void) // 1segundo
