@@ -104,15 +104,15 @@ void display_7seg(unsigned char dezena, unsigned char unidade)
     switch (estado)
     {
         case 0:
-            set_bit(PORTB, PB6);
-            clear_bit(PORTB, PB7);
+            set_bit(PORTB, DISP_1);
+            clear_bit(PORTB, DISP_2);
             show_display(unidade);
             //estado = 1;
             break;
 
         case 1:
-            clear_bit(PORTB, PB6);
-            set_bit(PORTB, PB7);
+            clear_bit(PORTB, DISP_1);
+            set_bit(PORTB, DISP_2);
             show_display(dezena);
             estado = 0;
             break;
