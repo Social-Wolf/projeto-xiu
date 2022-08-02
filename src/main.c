@@ -137,13 +137,13 @@ void f_timer2(void) // 400ms
 
 void f_timer3(void) // 600ms
 {
-    cpl_bit(PORTD, PD6);
+    cpl_bit(PORTD, LED_VISUAL);
 }
 
 void f_timer4(void) // 800ms
 {
     display_7seg(dezena, unidade);
-    cpl_bit(PORTD, PD7);
+    cpl_bit(PORTD, LED_SOM);
 
     //uart_string_sending_service("ola");
     //uart_string_sending_service("\n");
@@ -162,5 +162,5 @@ void f_timer5(void) // 1segundo
         dezena++;
     }
     if(dezena > 9) dezena = 0;
-    cpl_bit(PORTB, PB0);
+    cpl_bit(PORTB, LED_ON_OFF);
 }
