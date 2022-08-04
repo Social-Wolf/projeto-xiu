@@ -107,7 +107,7 @@ void display_7seg(unsigned char dezena, unsigned char unidade)
             set_bit(PORTB, DISP_1);
             clear_bit(PORTB, DISP_2);
             show_display(unidade);
-            //estado = 1;
+            estado = 1;
             break;
 
         case 1:

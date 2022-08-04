@@ -4,7 +4,7 @@ uint16_t  max_timer0, max_timer1, max_timer2, max_timer3, max_timer4, max_timer5
 uint16_t  unidade = 0, dezena = 0;
 
 char ch;
-int8_t buffer[];
+int8_t buffer[5];
 int8_t memoria;
 
 ISR(TIMER0_OVF_vect) 
@@ -69,15 +69,9 @@ void loop(void)
 
 void f_timers() // chamada a cada 1ms
 {
-    static uint16_t cont0 = 0, cont1 = 0, cont2 = 0, cont3 = 0, cont4 = 0, cont5 = 0;
+    static uint16_t cont1 = 0, cont2 = 0, cont3 = 0, cont4 = 0, cont5 = 0;
 
-    if(cont0 < max_timer0) cont0++; 
-    
-    else // base de tempo de  10ms
-    {
-        cont0 = 0;
-        f_timer0(); 
-    }
+    f_timer0(); 
 
     if(cont1 < max_timer1) cont1++; 
     
@@ -123,6 +117,7 @@ void f_timers() // chamada a cada 1ms
 
 void f_timer0(void) //   1ms
 {   
+    display_7seg(dezena, unidade);
 }
 
 void f_timer1(void) // 200ms
@@ -142,7 +137,6 @@ void f_timer3(void) // 600ms
 
 void f_timer4(void) // 800ms
 {
-    display_7seg(dezena, unidade);
     cpl_bit(PORTD, LED_SOM);
 
     //uart_string_sending_service("ola");

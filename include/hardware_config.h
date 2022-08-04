@@ -11,8 +11,8 @@
 #define BOTAO_1       PB3 
 #define BOTAO_2       PB4 
 #define BOTAO_3       PB5 
-#define DISP_1        PB6 
-#define DISP_2        PB7 
+#define DISP_1        PB7 
+#define DISP_2        PB6 
 
 #define DECOD_0       PC0 
 #define DECOD_1       PC1 
