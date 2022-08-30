@@ -1,6 +1,6 @@
 #include "ad_conversion.h"
 
-void set_ad_chanel_service(unsigned char channel)
+void set_ad_chanel_service(uint8_t channel)
 {
   ADMUX &= 0xf0;
   ADMUX |= (channel & 0x0f);
@@ -10,7 +10,7 @@ void set_ad_chanel_service(unsigned char channel)
 
 uint8_t ad_read_service(void)
 {
-  unsigned char dado = ADCH;
+  uint8_t dado = ADCH;
   return dado;
 }
 
@@ -24,49 +24,25 @@ void read_ad_chanel(void)
      * e em seguida faco uma logica circular de leitura dos canais */
     
   static uint8_t estado = 10;
-  
-  switch (estado) {
-      
-    case 0:
-      estado = 1;
-      ad_read[0] = ad_read_service();
-      set_ad_chanel_service(1);
-      break;
-        
-    case 1:
-      estado = 2;
-      ad_read[1] = ad_read_service();
-      set_ad_chanel_service(2);
-      break;
 
-    case 2:
-      estado = 3;
-      ad_read[2] = ad_read_service();
-      set_ad_chanel_service(3);
-      break;
-
-    case 3:
-      estado = 4;
-      ad_read[3] = ad_read_service();
-      set_ad_chanel_service(4);
-      break;
-
+  switch (estado) 
+  {
     case 4:
       estado = 5;
-      ad_read[4] = ad_read_service();
       set_ad_chanel_service(5);
+      ad_read[4] = ad_read_service();
       break;
 
     case 5:
-      estado = 0;
+      estado = 4;
+      set_ad_chanel_service(4);
       ad_read[5] = ad_read_service();
-      set_ad_chanel_service(0);
       break;
 
     default:
-      estado = 0;
-      set_ad_chanel_service(0);
-      ad_read[0] = ad_read_service();
+      estado = 5;
+      set_ad_chanel_service(5);
+      ad_read[4] = ad_read_service();
       break; 
   }    
 }
