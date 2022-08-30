@@ -11,7 +11,7 @@ void io_config()
     // entrada: 0 = sem pull-up 1 = com pull-up 
     // saida:   0 = low         1 = high
     PORTB = 0b00111100;
-    PORTC = 0b00110000; //inicio as saídas apagadas
+    PORTC = 0b11110000; //inicio as saídas apagadas
     PORTD = 0b00000000; //inicio o led apagado
 }
 
@@ -25,13 +25,12 @@ void timer_config()
     TCCR0B = 0b00000101;    //prescaler de 1024
     TCNT0 =  240;           //contagem para gerar 1ms
     TIMSK0 = 0b00000001;    //habilito interrupcao do timer0
-
 }
 
 void uart_config(uint16_t size)
 {
-  UBRR0H = (uint8_t)(size>>8);  //2 bits mais significativos de ubrr
-  UBRR0L = (uint8_t)size;       //8 bits menos significativos de ubrr
+  UBRR0H = (uint8_t)(size>>8);  // 2 bits mais significativos de ubrr
+  UBRR0L = (uint8_t)size;       // 8 bits menos significativos de ubrr
   
   //Habilita a interrupcao de recepcao e os pinos TX e RX
   UCSR0B =  (1<<RXEN0) | (1<<TXEN0) | (1<<RXCIE0);
@@ -40,9 +39,11 @@ void uart_config(uint16_t size)
   UCSR0C =  (1<<UCSZ01) | (1<<UCSZ00); 
 }
 
-void interrupt_config()
+void extern_interrupt_config()
 {
-
+  PCICR  = (1<<PCIE0);      // habilita a chave geral do PORTB
+  PCMSK0 = 0b00111100;    // habilita: PB2, PB3, PB4 e PB5 
+  PCIFR  = (1<<PCIF0);      // habilita as flags
 }
 
 void adc_config()
