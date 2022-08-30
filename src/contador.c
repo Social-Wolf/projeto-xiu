@@ -21,7 +21,7 @@
        //1000   -> 8    PD3 = 1
        //1001   -> 9    PD3 e PD0 = 1
 
-void show_display(unsigned char number)
+void show_display(uint8_t number)
 {
     switch (number)
     {
@@ -97,7 +97,7 @@ void show_display(unsigned char number)
     }
 }
 
-void display_7seg(unsigned char dezena, unsigned char unidade)
+void display_7seg(uint8_t dezena, uint8_t unidade)
 {
     static bool estado = 0;
 

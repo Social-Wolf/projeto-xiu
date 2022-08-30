@@ -1,4 +1,4 @@
 #include "hardware_config.h"
 
-void show_display(unsigned char number);
-void display_7seg(unsigned char dezena, unsigned char unidade);
+void show_display(uint8_t number);
+void display_7seg(uint8_t dezena, uint8_t unidade);
