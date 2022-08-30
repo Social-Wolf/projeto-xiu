@@ -3,28 +3,48 @@
 uint16_t  max_timer0, max_timer1, max_timer2, max_timer3, max_timer4, max_timer5;
 uint16_t  unidade = 0, dezena = 0;
 
-char ch;
-int8_t buffer[5];
+int8_t ch;
+int8_t buffer[];
 int8_t memoria;
 
 ISR(TIMER0_OVF_vect) 
 {
-  TCNT0 = 240; // recarrega o Timer 0 para contagem de 1ms
-  f_timers();
+    TCNT0 = 240; // recarrega o Timer 0 para contagem de 1ms
+    f_timers();
+}
+
+ISR(PCINT0_vect)
+{
+    if(!tst_bit(PINB, BOTAO_0))
+    {
+        cpl_bit(PORTB, LED_ON_OFF);
+    }
+    else if(!tst_bit(PINB, BOTAO_1))
+    {
+        cpl_bit(PORTD, LED_SOM);   
+    }
+    else if(!tst_bit(PINB, BOTAO_2))
+    {
+        cpl_bit(PORTD, LED_VISUAL);   
+    }
+    else if(!tst_bit(PINB, BOTAO_3))
+    {
+
+    }
 }
 
 ISR(USART_RX_vect) 
 {
-  ch = UDR0;    // Faz a leitura do buffer da serial 
-  UDR0 = ch;    // envia pela serial o valor lido  
+    ch = UDR0;    // Faz a leitura do buffer da serial 
+    UDR0 = ch;    // envia pela serial o valor lido  
 }
 
 ISR(ADC_vect)
 {
-  read_ad_chanel();
+    read_ad_chanel();
 }
 
-int16_t main()
+int8_t main()
 {
     setup();
     while(1)  loop();
@@ -47,7 +67,7 @@ void setup_hardware(void)
     timer_config();
     uart_config(16);
     adc_config();
-    read_ad_chanel();
+    extern_interrupt_config();
 
     sei();  //habilita todas as interrupcoes
 }
@@ -60,6 +80,8 @@ void setup_software(void)
     max_timer3 =  600;  // tempo: 600ms
     max_timer4 =  800;  // tempo: 800ms
     max_timer5 = 1000;  // tempo: 1segundo
+
+    read_ad_chanel();
 }
 
 void loop(void)
@@ -132,19 +154,17 @@ void f_timer2(void) // 400ms
 
 void f_timer3(void) // 600ms
 {
-    cpl_bit(PORTD, LED_VISUAL);
+    
 }
 
 void f_timer4(void) // 800ms
 {
-    cpl_bit(PORTD, LED_SOM);
-
     //uart_string_sending_service("ola");
     //uart_string_sending_service("\n");
 
-    memoria = ad_read[4];
-    sprintf(buffer, "%d\n", memoria);
-    uart_string_sending_service(buffer);
+    //memoria = ad_read[4];
+    //sprintf(buffer, "%d\n", memoria);
+    //uart_string_sending_service(buffer);
 }
 
 void f_timer5(void) // 1segundo
@@ -155,6 +175,6 @@ void f_timer5(void) // 1segundo
         unidade = 0;
         dezena++;
     }
-    if(dezena > 9) dezena = 0;
-    cpl_bit(PORTB, LED_ON_OFF);
+    if(dezena > 9)
+        dezena = 0;
 }
