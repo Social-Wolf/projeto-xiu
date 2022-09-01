@@ -1,15 +1,16 @@
 #include "main.h"
 
-uint16_t  max_timer0, max_timer1, max_timer2, max_timer3, max_timer4, max_timer5;
-uint16_t  unidade = 0, dezena = 0;
+uint16_t max_timer0, max_timer1, max_timer2, max_timer3, max_timer4, max_timer5;
+uint8_t  unidade = 0, dezena = 0;
+uint8_t  level, limit, soma;
 
-int8_t ch;
-int8_t buffer[];
-int8_t memoria;
+uint8_t ch;
+uint8_t buffer[];
+uint8_t memoria;
 
 ISR(TIMER0_OVF_vect) 
 {
-    TCNT0 = 240; // recarrega o Timer 0 para contagem de 1ms
+    TCNT0 = 252; // recarrega o Timer 0 para contagem de 250us
     f_timers();
 }
 
@@ -56,12 +57,11 @@ void setup(void)
 {
     setup_hardware();
     setup_software();
-    //tratar_leitura_do_ADC();
 }
 
 void setup_hardware(void)
 {
-    cli();  //desalibita todas as  interrupcoes
+    cli();  // desalibita todas as  interrupcoes
   
     io_config();
     timer_config();
@@ -69,17 +69,17 @@ void setup_hardware(void)
     adc_config();
     extern_interrupt_config();
 
-    sei();  //habilita todas as interrupcoes
+    sei();  // habilita todas as interrupcoes
 }
 
 void setup_software(void)
 {
-    max_timer0 =    1;  // tempo:   1ms
-    max_timer1 =  200;  // tempo: 200ms 
-    max_timer2 =  400;  // tempo: 400ms
-    max_timer3 =  600;  // tempo: 600ms
-    max_timer4 =  800;  // tempo: 800ms
-    max_timer5 = 1000;  // tempo: 1segundo
+    max_timer0 =    1;  // tempo: 250us
+    max_timer1 =    2;  // tempo: 500us 
+    max_timer2 =    3;  // tempo: 750us
+    max_timer3 =    4;  // tempo:   1ms
+    max_timer4 =    8;  // tempo:   2ms
+    max_timer5 = 4000;  // tempo: 1segundo
 
     read_ad_chanel();
 }
@@ -137,34 +137,38 @@ void f_timers() // chamada a cada 1ms
 
 }
 
-void f_timer0(void) //   1ms
+void f_timer0(void) // 250us
 {   
-    display_7seg(dezena, unidade);
+    //limit = leitura_ad_to_level(ad_read[4]);
+    limit = read_ad_to_level(ad_read[4]);
 }
 
-void f_timer1(void) // 200ms
+void f_timer1(void) // 500us
 {
-
+    if(level > limit)
+        level = 1;
+    level++;
+    visual_signal(level);
 }
 
-void f_timer2(void) // 400ms
-{
-    
-}
-
-void f_timer3(void) // 600ms
-{
-    
-}
-
-void f_timer4(void) // 800ms
+void f_timer2(void) // 750us
 {
     //uart_string_sending_service("ola");
     //uart_string_sending_service("\n");
+    
+    memoria = ad_read[4];
+    sprintf(buffer, "%d\n", memoria);
+    uart_string_sending_service(buffer);    
+}
 
-    //memoria = ad_read[4];
-    //sprintf(buffer, "%d\n", memoria);
-    //uart_string_sending_service(buffer);
+void f_timer3(void) // 1ms
+{
+    display_7seg(dezena, unidade);
+}
+
+void f_timer4(void) // 2ms
+{
+
 }
 
 void f_timer5(void) // 1segundo

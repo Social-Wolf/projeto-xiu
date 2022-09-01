@@ -8,8 +8,9 @@
 
 #include "ad_conversion.h"
 #include "hardware_config.h"
-#include "contador.h"
 #include "uart.h"
+#include "contador.h"
+#include "sinalizacao_visual.h"
 
 #define set_bit(y,bit)      (y|=(1<<bit)) //coloca em 1 o bit x da variável Y 
 #define clear_bit(y,bit)    (y&=~(1<<bit)) //coloca em 0 o bit x da variável Y 
