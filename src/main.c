@@ -2,48 +2,8 @@
 
 uint16_t max_timer0, max_timer1, max_timer2, max_timer3, max_timer4, max_timer5;
 uint8_t  unidade = 0, dezena = 0;
-uint8_t  level, limit, soma;
-
-uint8_t ch;
-uint8_t buffer[];
-uint8_t memoria;
-
-ISR(TIMER0_OVF_vect) 
-{
-    TCNT0 = 252; // recarrega o Timer 0 para contagem de 250us
-    f_timers();
-}
-
-ISR(PCINT0_vect)
-{
-    if(!tst_bit(PINB, BOTAO_0))
-    {
-        cpl_bit(PORTB, LED_ON_OFF);
-    }
-    else if(!tst_bit(PINB, BOTAO_1))
-    {
-        cpl_bit(PORTD, LED_SOM);   
-    }
-    else if(!tst_bit(PINB, BOTAO_2))
-    {
-        cpl_bit(PORTD, LED_VISUAL);   
-    }
-    else if(!tst_bit(PINB, BOTAO_3))
-    {
-
-    }
-}
-
-ISR(USART_RX_vect) 
-{
-    ch = UDR0;    // Faz a leitura do buffer da serial 
-    UDR0 = ch;    // envia pela serial o valor lido  
-}
-
-ISR(ADC_vect)
-{
-    read_ad_chanel();
-}
+uint8_t  limit, level;
+uint8_t  memoria;
 
 int8_t main()
 {
@@ -139,14 +99,19 @@ void f_timers() // chamada a cada 1ms
 
 void f_timer0(void) // 250us
 {   
-    //limit = leitura_ad_to_level(ad_read[4]);
     limit = read_ad_to_level(ad_read[4]);
+    if(limit == 0)
+        set_bit(PORTB, SWITCH_OFF);
+    else
+        clr_bit(PORTB, SWITCH_OFF);
 }
 
 void f_timer1(void) // 500us
 {
+    if(limit != 8)
+        clr_bit(PORTD, LED_8);
     if(level > limit)
-        level = 1;
+        level = 0;
     level++;
     visual_signal(level);
 }
