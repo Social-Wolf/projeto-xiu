@@ -5,7 +5,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#define LED_ON_OFF    PB0
+#define SWITCH_OFF    PB0
 #define BUZZER        PB1
 #define BOTAO_0       PB2
 #define BOTAO_1       PB3 
