@@ -18,44 +18,46 @@
 
 uint8_t read_ad_to_level(uint8_t leitura)
 {
-    uint8_t level;
+    uint8_t level = 0;
 
-    if(leitura <= 28)
+    if(leitura <= 29)
     {
-        level = 1;
-     }
+        level = 0;
+    }
     else if(leitura <= 56)
     {
-        level = 2; 
+        level = 1; 
     }
     else if(leitura <= 84)
     {
-        level = 3;
+        level = 2; 
     }
     else if(leitura <= 112)
     {
-        level = 4;
+        level = 3;
     }
     else if(leitura <= 140)
     {
-        level = 5;
+        level = 4;
     }
     else if(leitura <= 168)
     {
-        level = 6;
+        level = 5;
     }
     else if(leitura <= 196)
     {
-        level = 7;
+        level = 6;
     }
     else if(leitura <= 224)
     {
-        level = 8;
+        level = 7;
     }
     else if(leitura <= 255)
     {
+        level = 8;
         set_bit(PORTD, LED_8);
     }
+    
     return level;
 }
 
