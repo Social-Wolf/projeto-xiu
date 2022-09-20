@@ -4,13 +4,13 @@
 void io_config()
 {
     // 0 = entrada 1 = saida 
-    DDRB  = 0b11000011; //cont_disp como saída 
+    DDRB  = 0b11001111; //cont_disp como saída 
     DDRC  = 0b00001111; 
     DDRD  = 0b11111110;
 
     // entrada: 0 = sem pull-up 1 = com pull-up 
     // saida:   0 = low         1 = high
-    PORTB = 0b00111101;
+    PORTB = 0b00110001;
     PORTC = 0b11110000; //inicio as saídas apagadas
     PORTD = 0b00000000; //inicio o led apagado
 }

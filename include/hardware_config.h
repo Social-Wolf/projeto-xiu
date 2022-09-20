@@ -1,18 +1,11 @@
-#include <stdio.h>            //Bilioteca do C
-#include <stdbool.h>          //Biblioteca que permite utilizar variavel booleana
-#include <stdint.h>  
 #include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
 
 #define SWITCH_OFF    PB0
 #define BUZZER        PB1
-#define BOTAO_0       PB2
-#define BOTAO_1       PB3 
-#define BOTAO_2       PB4 
-#define BOTAO_3       PB5 
-#define DISP_1        PB7 
-#define DISP_2        PB6 
+#define DISP_1        PB2
+#define DISP_2        PB3 
+#define B_MENU        PB4 
+#define B_CONFIRM     PB5 
 
 #define DECOD_0       PC0 
 #define DECOD_1       PC1 
@@ -28,7 +21,7 @@
 #define DMX_2         PD4 
 #define LED_8         PD5 
 #define LED_VISUAL    PD6 
-#define LED_SOM       PD7 
+#define LED_ALARM     PD7 
 
 void io_config();
 void timer_config();
