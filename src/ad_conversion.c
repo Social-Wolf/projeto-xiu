@@ -29,20 +29,20 @@ void read_ad_chanel(void)
   {
     case 4:
       estado = 5;
-      set_ad_chanel_service(5);
+      set_ad_chanel_service(4);
       ad_read[4] = ad_read_service();
       break;
 
     case 5:
       estado = 4;
-      set_ad_chanel_service(4);
+      set_ad_chanel_service(5);
       ad_read[5] = ad_read_service();
       break;
 
     default:
-      estado = 5;
+      estado = 4;
       set_ad_chanel_service(5);
-      ad_read[4] = ad_read_service();
+      ad_read[5] = ad_read_service();
       break; 
   }    
 }
