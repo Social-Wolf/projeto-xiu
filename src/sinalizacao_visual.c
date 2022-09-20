@@ -61,51 +61,68 @@ uint8_t read_ad_to_level(uint8_t leitura)
     return level;
 }
 
+uint8_t level_analisys(uint8_t limit)
+{
+    static uint8_t level;
+
+    if(limit == 0)
+        set_bit(PORTB, SWITCH_OFF);
+    else
+        clr_bit(PORTB, SWITCH_OFF);
+    if(limit != 8)
+        clr_bit(PORTD, LED_8);
+    if(level > limit)
+        level = 0;
+    level++;
+
+    return level;
+}
+
 void visual_signal(uint8_t level)
 {
     switch  (level)
     {
-    case 1:
-        clr_bit(PORTD, DMX_0);
-        clr_bit(PORTD, DMX_1);
-        clr_bit(PORTD, DMX_2);
-        break;
-    case 2:
-        set_bit(PORTD, DMX_0);
-        clr_bit(PORTD, DMX_1);
-        clr_bit(PORTD, DMX_2);
-        break;
-    case 3:
-        clr_bit(PORTD, DMX_0);
-        set_bit(PORTD, DMX_1);
-        clr_bit(PORTD, DMX_2);
-        break;
-    case 4:
-        set_bit(PORTD, DMX_0);
-        set_bit(PORTD, DMX_1);
-        clr_bit(PORTD, DMX_2);
-        break;
-    case 5:
-        clr_bit(PORTD, DMX_0);
-        clr_bit(PORTD, DMX_1);
-        set_bit(PORTD, DMX_2);
-        break;
-    case 6:
-        set_bit(PORTD, DMX_0);
-        clr_bit(PORTD, DMX_1);
-        set_bit(PORTD, DMX_2);
-        break;
-    case 7:
-        clr_bit(PORTD, DMX_0);
-        set_bit(PORTD, DMX_1);
-        set_bit(PORTD, DMX_2);
-        break;
-    case 8:
-        set_bit(PORTD, DMX_0);
-        set_bit(PORTD, DMX_1);
-        set_bit(PORTD, DMX_2);
-        break;
-    default:
-        break;
+        case 1:
+            clr_bit(PORTD, DMX_0);
+            clr_bit(PORTD, DMX_1);
+            clr_bit(PORTD, DMX_2);
+            break;
+        case 2:
+            set_bit(PORTD, DMX_0);
+            clr_bit(PORTD, DMX_1);
+            clr_bit(PORTD, DMX_2);
+            break;
+        case 3:
+            clr_bit(PORTD, DMX_0);
+            set_bit(PORTD, DMX_1);
+            clr_bit(PORTD, DMX_2);
+            break;
+        case 4:
+            set_bit(PORTD, DMX_0);
+            set_bit(PORTD, DMX_1);
+            clr_bit(PORTD, DMX_2);
+            break;
+        case 5:
+            clr_bit(PORTD, DMX_0);
+            clr_bit(PORTD, DMX_1);
+            set_bit(PORTD, DMX_2);
+            break;
+        case 6:
+            set_bit(PORTD, DMX_0);
+            clr_bit(PORTD, DMX_1);
+            set_bit(PORTD, DMX_2);
+            break;
+        case 7:
+            clr_bit(PORTD, DMX_0);
+            set_bit(PORTD, DMX_1);
+            set_bit(PORTD, DMX_2);
+            break;
+        case 8:
+            set_bit(PORTD, DMX_0);
+            set_bit(PORTD, DMX_1);
+            set_bit(PORTD, DMX_2);
+            break;
+        default:
+            break;
     }
 }
