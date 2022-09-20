@@ -11,14 +11,16 @@
 #include "uart.h"
 #include "contador.h"
 #include "sinalizacao_visual.h"
+#include "menu_control.h"
 
 #define set_bit(y,bit)      (y|=(1<<bit)) //coloca em 1 o bit x da variável Y 
-#define clr_bit(y,bit)    (y&=~(1<<bit)) //coloca em 0 o bit x da variável Y 
+#define clr_bit(y,bit)      (y&=~(1<<bit)) //coloca em 0 o bit x da variável Y 
 #define cpl_bit(y,bit)      (y^=(1<<bit)) //troca o estado lógico do bit x da variável Y 
 #define tst_bit(y,bit)      (y&(1<<bit)) //retorna 0 ou 1 conforme leitura do bit
 
 uint8_t ch;
 uint8_t buffer[];
+uint8_t  menu_flag = 0, confirm_flag = 0;
 
 ISR(TIMER0_OVF_vect) 
 {
@@ -28,21 +30,19 @@ ISR(TIMER0_OVF_vect)
 
 ISR(PCINT0_vect)
 {
-    if(!tst_bit(PINB, BOTAO_0))
+    if(!tst_bit(PINB, B_MENU))
     {
-        //cpl_bit(PORTB, LED_ON_OFF);
+        menu_flag++;
+        _delay_ms(10);
     }
-    else if(!tst_bit(PINB, BOTAO_1))
+    else if(!tst_bit(PINB, B_CONFIRM))
     {
-        cpl_bit(PORTD, LED_SOM);   
+        //guard_function();
+        _delay_ms(70);
     }
-    else if(!tst_bit(PINB, BOTAO_2))
+    if(menu_flag == 4)
     {
-        cpl_bit(PORTD, LED_VISUAL);   
-    }
-    else if(!tst_bit(PINB, BOTAO_3))
-    {
-
+        menu_flag = 0;
     }
 }
 

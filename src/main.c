@@ -99,28 +99,27 @@ void f_timers() // chamada a cada 1ms
 
 void f_timer0(void) // 250us
 {   
-    limit = read_ad_to_level(ad_read[4]);
-    if(limit == 0)
-        set_bit(PORTB, SWITCH_OFF);
-    else
-        clr_bit(PORTB, SWITCH_OFF);
+    if(menu_flag == 2)
+    {
+        limit = read_ad_to_level(ad_read[4]);
+        visual_signal(level_analisys(limit));
+    }
+    if(menu_flag == 3)
+    {
+        limit = read_ad_to_level(ad_read[5]);
+        visual_signal(level_analisys(limit));
+    }
 }
 
 void f_timer1(void) // 500us
 {
-    if(limit != 8)
-        clr_bit(PORTD, LED_8);
-    if(level > limit)
-        level = 0;
-    level++;
-    visual_signal(level);
+    
 }
 
 void f_timer2(void) // 750us
 {
     //uart_string_sending_service("ola");
     //uart_string_sending_service("\n");
-    
     memoria = ad_read[4];
     sprintf(buffer, "%d\n", memoria);
     uart_string_sending_service(buffer);    
@@ -146,4 +145,6 @@ void f_timer5(void) // 1segundo
     }
     if(dezena > 9)
         dezena = 0;
+
+    select_function(menu_flag);
 }
