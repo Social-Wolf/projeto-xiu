@@ -19,7 +19,7 @@
 #define tst_bit(y,bit)      (y&(1<<bit)) //retorna 0 ou 1 conforme leitura do bit
 
 uint8_t ch;
-uint8_t buffer[];
+uint8_t buffer[10];
 uint8_t  menu_flag = 0, confirm_flag = 0;
 
 ISR(TIMER0_OVF_vect) 
