@@ -99,16 +99,37 @@ void f_timers() // chamada a cada 1ms
 
 void f_timer0(void) // 250us
 {   
-    if(menu_flag == 2)
+    if(menu_flag == 0)
     {
         limit = read_ad_to_level(ad_read[4]);
         visual_signal(level_analisys(limit));
+        DDRC  = 0b00011111;
+        PORTC &= (0<<5);
+        PORTC &= (1<<6);
     }
-    if(menu_flag == 3)
+    else if(menu_flag == 1)
+    {        
+        DDRC  = 0b00111111;
+        PORTC &= (0<<5);
+        PORTC &= (0<<6);
+    }
+    else if(menu_flag == 2)
     {
         limit = read_ad_to_level(ad_read[5]);
         visual_signal(level_analisys(limit));
+        DDRC  = 0b00101111;
+        PORTC &= (1<<5);
+        PORTC &= (0<<6);
     }
+    else if(menu_flag == 3)
+    {
+        limit = read_ad_to_level(ad_read[5]);
+        visual_signal(level_analisys(limit));
+        DDRC  = 0b00101111;
+        PORTC &= (1<<5);
+        PORTC &= (0<<6);
+    }
+    else level = 0;
 }
 
 void f_timer1(void) // 500us
@@ -121,8 +142,10 @@ void f_timer2(void) // 750us
     //uart_string_sending_service("ola");
     //uart_string_sending_service("\n");
     memoria = ad_read[4];
-    sprintf(buffer, "%d\n", memoria);
-    uart_string_sending_service(buffer);    
+    sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], limit);
+    uart_string_sending_service(buffer); 
+    // sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], level);
+    // uart_string_sending_service(buffer);    
 }
 
 void f_timer3(void) // 1ms
@@ -132,11 +155,12 @@ void f_timer3(void) // 1ms
 
 void f_timer4(void) // 2ms
 {
-
+    
 }
 
 void f_timer5(void) // 1segundo
 {   
+    select_function(menu_flag);
     unidade++;   
     if(unidade > 9)
     {
@@ -145,6 +169,4 @@ void f_timer5(void) // 1segundo
     }
     if(dezena > 9)
         dezena = 0;
-
-    select_function(menu_flag);
 }

@@ -21,6 +21,7 @@
 uint8_t ch;
 uint8_t buffer[];
 uint8_t  menu_flag = 0, confirm_flag = 0;
+bool menu_button_flag, confirm_button_flag;
 
 ISR(TIMER0_OVF_vect) 
 {
@@ -30,12 +31,15 @@ ISR(TIMER0_OVF_vect)
 
 ISR(PCINT0_vect)
 {
-    if(!tst_bit(PINB, B_MENU))
+    if(!tst_bit(PINB, B_MENU)) menu_button_flag = 1;
+    else if(tst_bit(PINB, B_MENU) && menu_button_flag)
     {
+        menu_button_flag = 0;
         menu_flag++;
         _delay_ms(10);
     }
-    else if(!tst_bit(PINB, B_CONFIRM))
+    if(!tst_bit(PINB, B_CONFIRM)) confirm_button_flag = 1;
+    else if(tst_bit(PINB, B_CONFIRM) && confirm_button_flag) 
     {
         //guard_function();
         _delay_ms(70);
@@ -45,6 +49,24 @@ ISR(PCINT0_vect)
         menu_flag = 0;
     }
 }
+
+// ISR(PCINT0_vect)
+// {
+//     if(!tst_bit(PINB, B_MENU))
+//     {
+//         menu_flag++;
+//         _delay_ms(10);
+//     }
+//     else if(!tst_bit(PINB, B_CONFIRM))
+//     {
+//         //guard_function();
+//         _delay_ms(70);
+//     }
+//     if(menu_flag == 4)
+//     {
+//         menu_flag = 0;
+//     }
+// }
 
 ISR(USART_RX_vect) 
 {
