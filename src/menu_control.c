@@ -40,6 +40,7 @@ void init_menu()
 {
     set_bit(PORTD, LED_VISUAL);
     set_bit(PORTD, LED_ALARM);
+    visual_signal(level_analisys(0));
 }
 
 void exit_menu()

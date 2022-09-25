@@ -71,7 +71,7 @@ uint8_t level_analisys(uint8_t limit)
         clr_bit(PORTB, SWITCH_OFF);
     if(limit != 8)
         clr_bit(PORTD, LED_8);
-    if(level > limit)
+    if(level == limit)
         level = 0;
     level++;
 

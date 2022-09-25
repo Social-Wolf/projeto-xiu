@@ -2,8 +2,8 @@
 
 #define SWITCH_OFF    PB0
 #define BUZZER        PB1
-#define DISP_1        PB2
-#define DISP_2        PB3 
+#define DISP_2        PB2
+#define DISP_1        PB3 
 #define B_MENU        PB4 
 #define B_CONFIRM     PB5 
 
