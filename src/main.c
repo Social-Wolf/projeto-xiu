@@ -117,7 +117,7 @@ void f_timer2(void) // 750us
 {   
     if(menu_flag == 0)
     {
-        limit = read_ad_to_level(ad_read[4]);
+        limit = read_ad_to_limit_level(ad_read[4]);
         visual_signal(level_analisys(limit));
         DDRC  = 0b00011111;
         PORTC &= ~(1<<5);
@@ -131,7 +131,7 @@ void f_timer2(void) // 750us
     }
     else if(menu_flag == 2)
     {
-        limit = read_ad_to_level(ad_read[5]);
+        limit = read_ad_to_limit_level(ad_read[5]);
         visual_signal(level_analisys(limit));
         DDRC  = 0b00101111;
         PORTC |= (1<<5);
@@ -139,7 +139,7 @@ void f_timer2(void) // 750us
     }
     else if(menu_flag == 3)
     {
-        limit = read_ad_to_level(ad_read[5]);
+        limit = read_ad_to_limit_level(ad_read[5]);
         visual_signal(level_analisys(limit));
         DDRC  = 0b00101111;
         PORTC |= (1<<5);

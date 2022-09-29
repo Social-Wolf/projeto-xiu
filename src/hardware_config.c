@@ -11,7 +11,7 @@ void io_config()
     // entrada: 0 = sem pull-up 1 = com pull-up 
     // saida:   0 = low         1 = high
     PORTB = 0b00110000;
-    PORTC = 0b11110000; //inicio as saídas apagadas
+    PORTC = 0b00000000; //inicio as saídas apagadas
     PORTD = 0b00000000; //inicio o led apagado
 }
 
