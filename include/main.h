@@ -52,6 +52,7 @@ ISR(PCINT0_vect)
         menu_button_flag = false;
         // menu_flag++;
         menu_status++;
+        menu_etapa = 0;
         _delay_ms(10);
     }
     
