@@ -220,9 +220,20 @@ void f_timer4(void) // 2ms
     }
     else {
         // TODO: PERSISTIR A OPERAÇÃO 
-        // TODO: GERAR O EFEITO DE CONFIRMAÇÃO
-        PORTD &= ~(1<<PD6);
-        PORTD &= ~(1<<PD7);
+
+        //EFEITO DE CONFIRMAÇÃO
+        OCR1A = 0; // volume minimo
+        for (int i = 0; i < 3; i++) {
+            PORTD |= (1<<PD6);
+            PORTD |= (1<<PD7);
+            OCR1A = 1023; // volume máximo
+            _delay_ms(100);
+            
+            PORTD &= ~(1<<PD6);
+            PORTD &= ~(1<<PD7);
+            OCR1A = 0; // volume minimo
+            _delay_ms(100);
+        }
 
         volume = (uint16_t) (1023*(ad_read[5]/255.0));
         menu_etapa = 0;
