@@ -23,6 +23,20 @@ uint8_t buffer[10];
 uint8_t  menu_flag = 0, confirm_flag = 0;
 bool menu_button_flag, confirm_button_flag;
 
+typedef enum {
+    INATIVO = 0, VISUAL, SONORO
+} menu_t;
+
+volatile menu_t menu_status = INATIVO;
+
+
+typedef enum {
+    AGUARDANDO_SELECAO = 0, SELECIONADO
+} etapa_do_menu_t;
+
+volatile etapa_do_menu_t menu_etapa = 0;
+
+
 ISR(TIMER0_OVF_vect) 
 {
     TCNT0 = 252; // recarrega o Timer 0 para contagem de 250us
@@ -31,23 +45,35 @@ ISR(TIMER0_OVF_vect)
 
 ISR(PCINT0_vect)
 {
-    if(!tst_bit(PINB, B_MENU)) menu_button_flag = 1;
+    if(!tst_bit(PINB, B_MENU)) 
+        menu_button_flag = true;
     else if(tst_bit(PINB, B_MENU) && menu_button_flag)
     {
-        menu_button_flag = 0;
-        menu_flag++;
+        menu_button_flag = false;
+        // menu_flag++;
+        menu_status++;
         _delay_ms(10);
     }
-    if(!tst_bit(PINB, B_CONFIRM)) confirm_button_flag = 1;
+    
+    if(!tst_bit(PINB, B_CONFIRM)) 
+        confirm_button_flag = true;
     else if(tst_bit(PINB, B_CONFIRM) && confirm_button_flag) 
     {
         //guard_function();
-        _delay_ms(70);
+        confirm_button_flag = false;
+        menu_etapa++;
+        _delay_ms(10);
     }
-    if(menu_flag == 4)
-    {
-        menu_flag = 0;
-    }
+
+    if (menu_status >= 3)
+        menu_status = 0;
+    
+    if (menu_etapa >= 3)
+        menu_etapa = 0;
+    // if(menu_flag == 4)
+    // {
+    //     menu_flag = 0;
+    // }
 }
 
 // ISR(PCINT0_vect)

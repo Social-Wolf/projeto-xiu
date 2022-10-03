@@ -107,7 +107,8 @@ void f_timer1(void) // 500us
     //uart_string_sending_service("ola");
     //uart_string_sending_service("\n");
     memoria = ad_read[4];
-    sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], limit);
+    // sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], limit);
+    sprintf(buffer, "%d\t%d\n", menu_status, menu_etapa);
     uart_string_sending_service(buffer); 
     // sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], level);
     // uart_string_sending_service(buffer);
@@ -115,7 +116,8 @@ void f_timer1(void) // 500us
 
 void f_timer2(void) // 750us
 {   
-    if(menu_flag == 0)
+    // if(menu_flag == 0)
+    if (menu_status == INATIVO)
     {
         limit = read_ad_to_limit_level(ad_read[4]);
         visual_signal(level_analisys(limit));
@@ -123,21 +125,24 @@ void f_timer2(void) // 750us
         PORTC &= ~(1<<5);
         PORTC |= (1<<6);
     }
-    else if(menu_flag == 1)
+    // else if(menu_flag == 1)
+    else if (menu_status == 1)
     {        
         DDRC  = 0b00111111;
         PORTC &= ~(1<<5);
         PORTC &= ~(1<<6);
     }
-    else if(menu_flag == 2)
+    // else if(menu_flag == 2)
+    else if (menu_status == VISUAL)
     {
-        limit = read_ad_to_limit_level(ad_read[5]);
+        limit = read_ad_to_limit_level(ad_read[4]);
         visual_signal(level_analisys(limit));
         DDRC  = 0b00101111;
         PORTC |= (1<<5);
         PORTC &= ~(1<<6);
     }
-    else if(menu_flag == 3)
+    // else if(menu_flag == 3)
+    else if (menu_status == SONORO)
     {
         limit = read_ad_to_limit_level(ad_read[5]);
         visual_signal(level_analisys(limit));
@@ -155,12 +160,54 @@ void f_timer3(void) // 1ms
 
 void f_timer4(void) // 2ms
 {
-    
+    // select_function(menu_flag);
+    static contador = 0;
+
+    if (menu_status == INATIVO) {
+        PORTD &= ~(1<<PD6);
+        PORTD &= ~(1<<PD7);
+        return;
+    }
+
+    if (menu_etapa == AGUARDANDO_SELECAO) {
+        contador++;
+
+        if (contador >= 100) {
+            contador = 0;
+            
+            if (menu_status == VISUAL) {
+                PORTD &= ~(1<<PD7);
+                PORTD ^= (1<<PD6);
+            }
+            else if (menu_status == SONORO) {
+                PORTD &= ~(1<<PD6);
+                PORTD ^= (1<<PD7);
+            }
+        }
+    }
+    else if (menu_etapa == SELECIONADO) {
+        if (menu_status == VISUAL) {
+            PORTD &= ~(1<<PD7);
+            PORTD |= (1<<PD6);
+        }
+        else if (menu_status == SONORO) {
+            PORTD &= ~(1<<PD6);
+            PORTD |= (1<<PD7);
+        }
+    }
+    else {
+        // TODO: PERSISTIR A OPERAÇÃO 
+        // TODO: GERAR O EFEITO DE CONFIRMAÇÃO
+        PORTD &= ~(1<<PD6);
+        PORTD &= ~(1<<PD7);
+
+        menu_etapa = 0;
+        menu_status = 0;
+    }
 }
 
 void f_timer5(void) // 1segundo
 {   
-    select_function(menu_flag);
     unidade++;   
     if(unidade > 9)
     {

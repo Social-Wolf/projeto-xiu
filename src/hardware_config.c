@@ -25,6 +25,11 @@ void timer_config()
     TCCR0B = 0b00000101;    //prescaler de 1024
     TCNT0 =  252;           //contagem para gerar 250us
     TIMSK0 = 0b00000001;    //habilito interrupcao do timer0
+
+    // PWM
+    TCCR1A = 0b10000011;
+    TCCR1B = 0b00001011;
+    OCR1A = 0;
 }
 
 void uart_config(uint16_t size)
