@@ -36,7 +36,6 @@ typedef enum {
 
 volatile etapa_do_menu_t menu_etapa = 0;
 
-
 ISR(TIMER0_OVF_vect) 
 {
     TCNT0 = 252; // recarrega o Timer 0 para contagem de 250us

@@ -2,7 +2,7 @@
 
 uint16_t max_timer0, max_timer1, max_timer2, max_timer3, max_timer4, max_timer5;
 uint8_t  unidade = 0, dezena = 0;
-uint8_t  limit, level;
+uint8_t  limit, level, temporaria = 255;
 uint8_t  memoria;
 uint16_t volume = 1023;
 
@@ -108,8 +108,8 @@ void f_timer1(void) // 500us
     //uart_string_sending_service("ola");
     //uart_string_sending_service("\n");
     memoria = ad_read[4];
-    // sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], limit);
-    sprintf(buffer, "%d\t%d\n", menu_status, menu_etapa);
+    sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], limit);
+    //sprintf(buffer, "%d\t%d\n", menu_status, menu_etapa);
     uart_string_sending_service(buffer); 
     // sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], level);
     // uart_string_sending_service(buffer);
@@ -121,7 +121,7 @@ void f_timer2(void) // 750us
         return;
     
     // OPERANDO EM MODO PADRÃO
-    limit = read_ad_to_limit_level(ad_read[4]);
+    limit = read_ad_to_limit_level(ad_read[4], temporaria);
     visual_signal(level_analisys(limit));
     if (limit == 8)
         OCR1A = volume;
@@ -132,7 +132,7 @@ void f_timer2(void) // 750us
     // if(menu_flag == 0)
     // if (menu_status == INATIVO)
     // {
-    //     limit = read_ad_to_limit_level(ad_read[4]);
+    //     limit = read_ad_to_limit_level(ad_read[4], 255);
     //     visual_signal(level_analisys(limit));
     //     DDRC  = 0b00011111;
     //     PORTC &= ~(1<<5);
@@ -148,7 +148,7 @@ void f_timer2(void) // 750us
     // // else if(menu_flag == 2)
     // else if (menu_status == VISUAL)
     // {
-    //     limit = read_ad_to_limit_level(ad_read[4]);
+    //     limit = read_ad_to_limit_level(ad_read[4], 255);
     //     visual_signal(level_analisys(limit));
     //     DDRC  = 0b00101111;
     //     PORTC |= (1<<5);
@@ -157,7 +157,7 @@ void f_timer2(void) // 750us
     // // else if(menu_flag == 3)
     // else if (menu_status == SONORO)
     // {
-    //     limit = read_ad_to_limit_level(ad_read[5]);
+    //     limit = read_ad_to_limit_level(ad_read[5], 255);
     //     visual_signal(level_analisys(limit));
     //     DDRC  = 0b00101111;
     //     PORTC |= (1<<5);
@@ -203,8 +203,10 @@ void f_timer4(void) // 2ms
     }
     else if (menu_etapa == SELECIONADO) {
         if (menu_status == VISUAL) {
-            OCR1A = 0;
-            limit = read_ad_to_limit_level(ad_read[4]);
+            //OCR1A = (uint16_t) (1023*(ad_read[5]/255.0));
+            temporaria = ad_read[5];
+            OCR1A = (uint16_t) (1023*(temporaria/255.0));
+            limit = read_ad_to_limit_level(temporaria, 255);
             visual_signal(level_analisys(limit));
 
             PORTD &= ~(1<<PD7);
