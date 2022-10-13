@@ -16,10 +16,60 @@
  *  0   1   1   0       6
  *  0   1   1   1       7       */
 
-uint8_t read_ad_to_limit_level(uint8_t leitura)
+uint8_t read_ad_to_limit_level(uint8_t leitura, uint8_t limit_abs)
 {
     uint8_t limit_level = 0;
+    uint8_t passo = 0;
+    uint8_t resolucao[9];
 
+    passo = limit_abs/9; 
+
+    resolucao[0] = passo;
+
+    for(char i = 1; i<9; i++)
+    {
+        resolucao[i] = resolucao[i-1] + passo;        
+    }
+
+    if(leitura <= resolucao[0])
+    {
+        limit_level = 0;
+    }
+    else if(leitura <= resolucao[1])
+    {
+        limit_level = 1; 
+    }
+    else if(leitura <= resolucao[2])
+    {
+        limit_level = 2; 
+    }
+    else if(leitura <= resolucao[3])
+    {
+        limit_level = 3;
+    }
+    else if(leitura <= resolucao[4])
+    {
+        limit_level = 4;
+    }
+    else if(leitura <= resolucao[5])
+    {
+        limit_level = 5;
+    }
+    else if(leitura <= resolucao[6])
+    {
+        limit_level = 6;
+    }
+    else if(leitura <= resolucao[7])
+    {
+        limit_level = 7;
+    }
+    else
+    {
+        limit_level = 8;
+        set_bit(PORTD, LED_8);
+    }
+
+    /*
     if(leitura <= 29)
     {
         limit_level = 0;
@@ -57,7 +107,8 @@ uint8_t read_ad_to_limit_level(uint8_t leitura)
         limit_level = 8;
         set_bit(PORTD, LED_8);
     }
-    
+    */
+
     return limit_level;
 }
 
