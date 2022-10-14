@@ -108,11 +108,11 @@ void f_timer1(void) // 500us
     //uart_string_sending_service("ola");
     //uart_string_sending_service("\n");
     memoria = ad_read[4];
-    sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], limit);
+    // sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], limit);
     //sprintf(buffer, "%d\t%d\n", menu_status, menu_etapa);
-    uart_string_sending_service(buffer); 
     // sprintf(buffer, "%d\t%d\t%d\t%d\n", menu_flag, ad_read[4], ad_read[5], level);
-    // uart_string_sending_service(buffer);
+    
+    // uart_string_sending_service(buffer);     
 }
 
 void f_timer2(void) // 750us
@@ -191,7 +191,7 @@ void f_timer4(void) // 2ms
         if (contador >= 100) {
             contador = 0;
             
-            if (menu_status == VISUAL) {
+            if (menu_status == CALIBRACAO) {
                 PORTD &= ~(1<<PD7);
                 PORTD ^= (1<<PD6);
             }
@@ -202,7 +202,7 @@ void f_timer4(void) // 2ms
         }
     }
     else if (menu_etapa == SELECIONADO) {
-        if (menu_status == VISUAL) {
+        if (menu_status == CALIBRACAO) {
             //OCR1A = (uint16_t) (1023*(ad_read[5]/255.0));
             temporaria = ad_read[5];
             OCR1A = (uint16_t) (1023*(temporaria/255.0));
@@ -237,7 +237,9 @@ void f_timer4(void) // 2ms
             _delay_ms(100);
         }
 
-        volume = (uint16_t) (1023*(ad_read[5]/255.0));
+        if (menu_status == SONORO)
+            volume = (uint16_t) (1023*(ad_read[5]/255.0));
+
         menu_etapa = 0;
         menu_status = 0;
     }

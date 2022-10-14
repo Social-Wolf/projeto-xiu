@@ -24,7 +24,7 @@ uint8_t  menu_flag = 0, confirm_flag = 0;
 bool menu_button_flag, confirm_button_flag;
 
 typedef enum {
-    INATIVO = 0, VISUAL, SONORO
+    INATIVO = 0, CALIBRACAO, SONORO
 } menu_t;
 
 volatile menu_t menu_status = INATIVO;
