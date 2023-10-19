@@ -1,4 +1,5 @@
 #include "sinalizacao_visual.h"
+#include "ad_conversion.h"
 
 #define set_bit(y,bit)      (y|=(1<<bit)) //coloca em 1 o bit x da variável Y 
 #define clr_bit(y,bit)      (y&=~(1<<bit)) //coloca em 0 o bit x da variável Y 
@@ -127,4 +128,44 @@ void visual_signal(uint8_t level)
         default:
             break;
     }
+}
+
+float filter_signal_mm(uint8_t sensorValue)
+{
+    #define NUMSAMPLES  5
+
+    uint8_t samples[NUMSAMPLES];          // Array para armazenar as amostras
+    static uint8_t sampleIndex = 0;       // Índice atual no array
+    static uint8_t average = 0;
+
+    // float voltage = (sensorValue * referenceVoltage) / 1023.0;
+
+    // float linearValue = sensorScale * log10(voltage + 1);
+
+    // Armazena o valor lido no array de amostras
+    samples[sampleIndex] = sensorValue;
+
+    // Calcula a média das amostras
+    int sum = 0;
+    for (int i = 0; i < NUMSAMPLES; i++) {
+        sum += samples[i];
+    }
+    average = sum / NUMSAMPLES;
+
+    // Incrementa o índice de amostras
+    sampleIndex = (sampleIndex + 1) % NUMSAMPLES;
+
+    return average;
+}
+
+float filter_signal_exp(uint8_t sensorValue)
+{
+    float alpha = 0.2;
+    static float filteredValue, filteredValue_old;
+
+    filteredValue = alpha * sensorValue + (1 - alpha) * filteredValue_old;
+
+    filteredValue_old = filteredValue;
+
+    return filteredValue;
 }
